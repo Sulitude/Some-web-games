@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Practice-1</title>
+    <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+    <link rel="stylesheet" href="1.css">
+    <link href='http://cdn.repository.webfont.com/webfonts/nomal/131994/36009/5d393686f629d813e079f5d7.css' rel='stylesheet' type='text/css' />
+    <link href='http://cdn.repository.webfont.com/webfonts/nomal/131994/46908/5d391cc6f629d813e079f59f.css' rel='stylesheet' type='text/css' />
+    
+</head>
+<body>
+    <div id="base">
+        <h1>拼图游戏</h1>
+        <hr>
+        <div id="lattice">
+            <!-- 2D控制 -->
+            <div v-for="num in allnum" v-bind:id =num.id :class = "active">
+                <!-- 3D控制 -->
+                <div :class="flip" v-on:dblclick="turn()">
+                    <div class="side side_front"><p>{{allnum.indexOf(num)+1}}</p></div>
+                    <div class="side side_back"><p>?</p></div>
+                </div>
+            </div>
+            
+        </div>
+        <!-- 侧边栏 -->
+        <div id="sidebar">
+            <button @click="start('hi')">Start</button>
+            <button >Stop</button>
+            <button>Reset</button>
+            <p>Time:<b style="color: rgb(51, 93, 148)">{{time}}</b><i>s</i></p>
+        </div>
+    </div>
+    <script async defer>
+        var demo = new Vue({
+            el:'#base',
+            data:{
+                time:'000',
+                active:'positive',
+                flip:'flip flip_front',
+                allnum:[
+                    {id:'n1'},{id:'n2'},{id:'n3'},{id:'n4'},{id:'n5'},{id:'n6'},{id:'n7'},{id:'n8'}
+                ]
+            },
+            methods: {
+                turn:function(){
+                    this.flip=/[\s\S]*front/.test(this.flip)?'flip flip_back':'flip flip_front';
+                },
+                start:function(m){
+                    let i = 8,t;
+                    while(i>0){
+                        let j = Math.floor(Math.random() * i--);
+                        t = this.allnum[i];
+                        this.allnum[i] = this.allnum[j];
+                        this.allnum[j] = t;
+                        
+                        // [this.allnum[j],this.allnum[i]] = [this.allnum[i]],this.allnum[j];
+                    }   
+                },
+                // stop:function(){
+                // }
+            },
+        })
+        
+    </script>
+</body>
+</html>
+
+

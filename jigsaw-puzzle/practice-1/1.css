@@ -1,0 +1,145 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    font-family: 'NSimSun' serif 'Microsoft Yahei';
+    text-align: center;
+    vertical-align: middle;
+}
+hr{
+    margin: 0 20px;
+}
+html,body{
+    height: 100%;
+}
+#base{
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    height: 80%;
+    width: 50%;
+    margin-top: 5%;
+    background-color: rgba(216, 233, 255,10%);
+    border-radius: 5px;
+    box-shadow: 2px 2px 6px rgb(111, 111, 111);
+    overflow: hidden;
+}
+h1{
+    position: relative;
+    margin: 10px 0;
+    font-size: 3.5em;
+    color:rgb(255, 255, 255);
+    text-shadow:0 0 2px rgb(41, 41, 41),
+                1px 1px 3px rgb(41, 41, 41),
+                2px 2px 4px rgb(41, 41, 41);
+}
+/* 外框 */
+#lattice{
+    position: relative;
+    margin: 2%;
+    width: 600px;
+    height: 600px;
+    background-color: rgb(173, 229, 255);
+    box-shadow: 2px 2px 6px rgb(111, 111, 111);
+    box-sizing: border-box;
+}
+/* 内部8个小格 */
+ .positive .side{
+    position: absolute;
+    padding: 5px 0 0 5px;
+    width: 200px;
+    height: 200px;
+    line-height: 200px;
+    border: 1px solid rgb(153, 153, 153);
+    box-sizing: border-box;
+    backface-visibility: hidden;
+}
+/* 正面*/
+#lattice .positive .side_front{
+    background:rgb(56, 192, 255);
+}
+/* 反面 */
+#lattice .positive .side_back{
+    background:rgb(53, 169, 223);
+}
+/* 让转换的子元素保留3D转换 */
+.flip{
+    perspective: 1000px;
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    -ms-transform-style: preserve-3d;
+    -o-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    transition: all 1.5s ease-in-out 0.2s;
+}
+/* 初始化正反面两种状态，隐藏反面 */
+.flip .side_front{
+    -webkit-transform: rotateY(0deg);
+    -moz-transform: rotateY(0deg);
+    -ms-transform: rotateY(0deg);
+    -o-transform: rotateY(0deg);
+    transform: rotateY(0deg);
+}
+.flip .side_back{
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    -ms-transform: rotateY(180deg);
+    -o-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+}
+/* 点击切换正反面 */
+#lattice .flip_front{ 
+    -webkit-transform: rotateY(0deg);
+    -moz-transform: rotateY(0deg);
+    -ms-transform: rotateY(0deg);
+    -o-transform: rotateY(0deg);
+    transform: rotateY(0deg);
+    transform-origin: 100px 0;
+}
+#lattice .flip_back{
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    -ms-transform: rotateY(180deg);
+    -o-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+    transform-origin: 100px 0;
+}
+#lattice p{
+    font-size: 100px;
+    font-family:'a6';
+    color: white;
+}
+#n1{position: absolute; top: 0;left: 0;}
+#n2{position: absolute; top: 0;left: 200px;}
+#n3{position: absolute;top: 0;left: 400px;}
+#n4{position: absolute;top: 200px;left: 0;}
+#n5{position: absolute;top: 200px;left: 200px;}
+#n6{position: absolute;top: 200px;left: 400px;}
+#n7{position: absolute;top: 400px;left: 0px;}
+#n8{position: absolute;top: 400px;left: 200px;}
+/* 侧边栏 */
+#sidebar{
+    position: absolute;
+    display: block;
+    left: 700px;
+    top: 111px;
+}
+#sidebar button{
+    display: block;
+    margin-top: 10px;
+    background-color: rgb(56, 192, 255);
+    color: white;
+    width: 100px;
+    line-height: 1.6em;
+    font-size: 1.6em;
+    font-family:'GoodVibrationsROB';
+    cursor: pointer;
+}
+#sidebar p{
+    width: 100px;
+    line-height: 1.6em;
+    margin-top: 40px;
+    font-family:'GoodVibrationsROB';
+    font-size: 1.6em;
+    font-weight: 900;
+    color: rgb(12, 137, 196);
+}
