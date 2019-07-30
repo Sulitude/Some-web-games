@@ -7,20 +7,18 @@
     <title>Practice-1</title>
     <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
     <link rel="stylesheet" href="1.css">
-    <link href='http://cdn.repository.webfont.com/webfonts/nomal/131994/36009/5d393686f629d813e079f5d7.css' rel='stylesheet' type='text/css' />
-    <link href='http://cdn.repository.webfont.com/webfonts/nomal/131994/46908/5d391cc6f629d813e079f59f.css' rel='stylesheet' type='text/css' />
     
 </head>
 <body>
     <div id="base">
         <h1>拼图游戏</h1>
         <hr>
-        <div id="lattice">
+        <div id="lattice" v-on:v-cloak>
             <!-- 2D控制 -->
-            <div v-for="num in allnum" v-bind:id =num.id :class = "active">
+            <div v-for="num in allNum" :id =num.id class="positive"  @click="move(num)" ref="litlat" v-on:v-cloak>
                 <!-- 3D控制 -->
-                <div :class="flip" v-on:dblclick="turn()">
-                    <div class="side side_front"><p>{{allnum.indexOf(num)+1}}</p></div>
+                <div :class="flip"  v-on:dblclick="turn()"  >
+                    <div class="side side_front" ><p >{{allNum.indexOf(num)+1}}</p></div>
                     <div class="side side_back"><p>?</p></div>
                 </div>
             </div>
@@ -28,43 +26,119 @@
         </div>
         <!-- 侧边栏 -->
         <div id="sidebar">
-            <button @click="start('hi')">Start</button>
-            <button >Stop</button>
-            <button>Reset</button>
-            <p>Time:<b style="color: rgb(51, 93, 148)">{{time}}</b><i>s</i></p>
+            <button @click="start">Start New</button>
+            <button @click="stop($event)" id = "timeout">Stop</button>
+            <p>Time:<b style="color: rgb(51, 93, 148)">{{ time | keepTwo }}</b><i>s</i></p>
         </div>
     </div>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.min.js"></script>
     <script async defer>
         var demo = new Vue({
             el:'#base',
             data:{
-                time:'000',
-                active:'positive',
                 flip:'flip flip_front',
-                allnum:[
-                    {id:'n1'},{id:'n2'},{id:'n3'},{id:'n4'},{id:'n5'},{id:'n6'},{id:'n7'},{id:'n8'}
-                ]
+                vacant_position:'',
+                end:'',
+                time:0.0,
+                inte:'',
+                allnum:'', 
+                allNum:'',
+                pause:false,
             },
             methods: {
                 turn:function(){
                     this.flip=/[\s\S]*front/.test(this.flip)?'flip flip_back':'flip flip_front';
                 },
-                start:function(m){
-                    let i = 8,t;
+                start:function(){
+                    // 初始化allnum以及allNum
+                    // 可分为九个区域
+                    this.allnum=[
+                    {id:'n1'},{id:'n2'},{id:'n3'},{id:'n4'},{id:'n5'},{id:'n6'},{id:'n7'},{id:'n8'},{id:'n9'}
+                    ];
+                    // 九个区域中八个可移动的块
+                    this.allNum=[
+                    {id:'n1'},{id:'n2'},{id:'n3'},{id:'n4'},{id:'n5'},{id:'n6'},{id:'n7'},{id:'n8'}
+                    ];
+                    // 随机打乱顺序
+                    let i = this.allnum.length,t,j;
                     while(i>0){
-                        let j = Math.floor(Math.random() * i--);
+                        j = Math.floor(Math.random() * i--);
                         t = this.allnum[i];
                         this.allnum[i] = this.allnum[j];
                         this.allnum[j] = t;
-                        
-                        // [this.allnum[j],this.allnum[i]] = [this.allnum[i]],this.allnum[j];
-                    }   
+                    // [this.allnum[j],this.allnum[i]] = [this.allnum[i]],this.allnum[j];
+                    };
+                    this.allNum = this.allnum.slice(0,8);  
+                    this.vacant_position = this.allnum[8].id;
+                    this.flip = 'flip flip_front';
+                    this.pause = false;
+                    document.getElementById("timeout").style='';
+                    document.getElementById("timeout").innerHTML='Stop';
+                    clearInterval(this.inte);    
+                    this.time = 0.0;                
+                    this.inte = setInterval(this.timer,100);
                 },
-                // stop:function(){
-                // }
+                move:function(el){
+                        let n = this.vacant_position.slice(1),
+                            m = el.id.slice(1),
+                            clname = document.getElementById(el.id);
+                    if((n==3&&m==4) || (n==4&&m==3) || (n==6&&m==7) || (n==7&&m==6) || 
+                       (Math.abs(n-m)!=1 && Math.abs(n-m)!=3))
+                       {
+                           clname.className = 'positive stay';
+                           clname.addEventListener("animationend",function(){
+                                clname.className = 'positive';
+                           })
+                    }
+                    else{
+                        let a = this.vacant_position;
+                        this.vacant_position = el.id;
+                        el.id = a;
+                    };
+                    clname.addEventListener("transitionend",this.down);
+                },
+                down:function(){
+                    let y=[],content;
+                    for(let i=0;i<this.allNum.length;i++){
+                        content = this.$refs.litlat[i].id.slice(1);
+                        y.push(content);
+                    };
+                    this.end =y.join(''); 
+                    let x ='12345678';
+                    if(this.end == x){
+                        clearInterval(this.inte);
+                        alert("Congratulations");
+                    };
+                }, 
+                timer:function(){
+                    
+                    this.time += 0.1;
+                },
+                stop:function(e){
+                    if(!this.pause){
+                        this.pause = !this.pause;
+                        e.target.style = "background-color:rgb(53, 169, 223)";
+                        e.target.innerHTML = "Continue";
+                        clearInterval(this.inte);
+                        this.flip = 'flip flip_back';
+                    }
+                    else{
+                        this.pause = !this.pause;
+                        e.target.style = "";
+                        e.target.innerHTML = "Stop";
+                        this.inte = setInterval(this.timer,100);
+                        this.flip = 'flip flip_front';
+                    }
+                },
             },
-        })
-        
+            created() {
+                this.start();
+            },
+        });
+        Vue.filter('keepTwo',function(n){
+            n = Number(n);
+            return n.toFixed(1);
+        });
     </script>
 </body>
 </html>

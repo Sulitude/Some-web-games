@@ -36,6 +36,7 @@ h1{
 #lattice{
     position: relative;
     margin: 2%;
+    cursor: pointer;
     width: 600px;
     height: 600px;
     background-color: rgb(173, 229, 255);
@@ -61,6 +62,27 @@ h1{
 #lattice .positive .side_back{
     background:rgb(53, 169, 223);
 }
+/* 若点击的方块不能移动,则添加动画效果 */
+@keyframes stayhere{
+    0%   {transform:scale(1,1);}
+    50%  {transform:scale(0.9,0.9);}
+    100% {transform:scale(1,1);}
+}
+@-webkit-keyframes stayhere{
+    0%   {transform:scale(1,1);}
+    50%  {transform:scale(0.9,0.9);}
+    100% {transform:scale(1,1);}
+}
+#lattice .stay{
+    /* transform: scale(0.5,0.5); */
+    animation: stayhere .5s;
+    -webkit-animation: stayhere .5s;
+}
+/* 点击平移效果 */
+#lattice .positive{
+    transform-origin: 100px 100px;
+    transition:all .1s ease-in-out;
+}
 /* 让转换的子元素保留3D转换 */
 .flip{
     perspective: 1000px;
@@ -69,7 +91,7 @@ h1{
     -ms-transform-style: preserve-3d;
     -o-transform-style: preserve-3d;
     transform-style: preserve-3d;
-    transition: all 1.5s ease-in-out 0.2s;
+    transition: all .2s ease-in-out 0.2s;
 }
 /* 初始化正反面两种状态，隐藏反面 */
 .flip .side_front{
@@ -105,7 +127,6 @@ h1{
 }
 #lattice p{
     font-size: 100px;
-    font-family:'a6';
     color: white;
 }
 #n1{position: absolute; top: 0;left: 0;}
@@ -116,6 +137,8 @@ h1{
 #n6{position: absolute;top: 200px;left: 400px;}
 #n7{position: absolute;top: 400px;left: 0px;}
 #n8{position: absolute;top: 400px;left: 200px;}
+#n9{position: absolute;top: 400px;left: 400px;}
+
 /* 侧边栏 */
 #sidebar{
     position: absolute;
@@ -128,17 +151,15 @@ h1{
     margin-top: 10px;
     background-color: rgb(56, 192, 255);
     color: white;
-    width: 100px;
+    width: 150px;
     line-height: 1.6em;
     font-size: 1.6em;
-    font-family:'GoodVibrationsROB';
     cursor: pointer;
 }
 #sidebar p{
     width: 100px;
     line-height: 1.6em;
     margin-top: 40px;
-    font-family:'GoodVibrationsROB';
     font-size: 1.6em;
     font-weight: 900;
     color: rgb(12, 137, 196);
